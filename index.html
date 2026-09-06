@@ -14,11 +14,15 @@
             flex-direction: column;
             align-items: center;
         }
-        h1 {
+                h1 {
             color: #2c3e50;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             text-align: center;
+            font-size: 22px; /* 모바일 화면에 맞춰 글자 크기 조정 */
+            word-break: keep-all; /* 단어가 도중에 끊기지 않도록 설정 */
+            white-space: nowrap; /* 글자가 줄바꿈되지 않고 한 줄에 나오도록 설정 */
         }
+
         .container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
