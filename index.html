@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>중2 과학 학습 대시보드</title>
+    <style>
+        body {
+            font-family: 'Pretendard', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 900px;
+        }
+        .card {
+            background-color: white;
+            padding: 22px 18px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            text-align: center;
+            text-decoration: none;
+            color: #333;
+            font-weight: 600;
+            font-size: 16px;
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+            border: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.4;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+            color: #007bff;
+            border-color: #007bff;
+        }
+        /* 동영상 카드 특별 스타일 */
+        .card.video {
+            background-color: #ff0000;
+            color: white;
+            grid-column: 1 / -1; /* 맨 위에 길게 표시 */
+            font-size: 18px;
+        }
+        .card.video:hover {
+            background-color: #cc0000;
+            color: white;
+            border-color: transparent;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>📚 중2 과학 학습 대시보드</h1>
+
+    <div class="container">
+        <!-- 유튜브 동영상 재생목록 -->
+        <a href="https://youtube.com/playlist?list=PLwAliv9fb_U7W4fqFFSfBADt3aMi9ti0-&si=0G_8LdEw0Y77A8Se" class="card video" target="_blank">
+            ▶️ 중2 과학 동영상 재생목록
+        </a>
+
+        <!-- 단원별 링크 모음 -->
+        <a href="https://eunjungcheer-collab.github.io/2-2" class="card" target="_blank">2단원 지권의 변화</a>
+        <a href="https://eunjungcheer-collab.github.io/2-4" class="card" target="_blank">4단원 물질의 구성</a>
+        <a href="https://eunjungcheer-collab.github.io/2-5" class="card" target="_blank">5단원 식물의 구성</a>
+        <a href="https://eunjungcheer-collab.github.io/2-6-1" class="card" target="_blank">6단원 소화</a>
+        <a href="https://eunjungcheer-collab.github.io/2-6-2/" class="card" target="_blank">6단원 순환</a>
+        <a href="https://eunjungcheer-collab.github.io/2-6-3" class="card" target="_blank">6단원 호흡</a>
+        <a href="https://eunjungcheer-collab.github.io/2-6-4" class="card" target="_blank">6단원 배설</a>
+        <a href="https://eunjungcheer-collab.github.io/2-7" class="card" target="_blank">7단원 전기와 자기</a>
+        <a href="https://eunjungcheer-collab.github.io/2-8" class="card" target="_blank">8단원 별과 우주</a>
+    </div>
+
+</body>
+</html>
