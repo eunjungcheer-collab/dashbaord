@@ -1,96 +1,639 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>중2 과학 학습 대시보드</title>
-    <style>
-        body {
-            font-family: 'Pretendard', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
-            margin: 0;
-            padding: 40px 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-                h1 {
-            color: #2c3e50;
-            margin-bottom: 25px;
-            text-align: center;
-            font-size: 22px; /* 모바일 화면에 맞춰 글자 크기 조정 */
-            word-break: keep-all; /* 단어가 도중에 끊기지 않도록 설정 */
-            white-space: nowrap; /* 글자가 줄바꿈되지 않고 한 줄에 나오도록 설정 */
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>이은정 과학 연구소</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;600;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#EEF3FC;
+    --card:#FFFFFF;
+    --card-soft:#E8EFFC;
+    --rust:#2A52BE;
+    --rust-deep:#163B9E;
+    --rust-pale:#DCE6FB;
+    --plum:#4C4A9E;
+    --plum-pale:#E7E5F7;
+    --text:#16213A;
+    --muted:#5B6B8C;
+    --line:#D8E1F5;
+    --amber:#8A5A16;
+    --amber-bg:#F1E3C9;
+    --success:#4C7A5D;
+    --radius:12px;
+    --radius-sm:8px;
+    --shadow:0 3px 14px rgba(20,40,100,0.08);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(560px 360px at 90% -8%, rgba(42,82,190,0.10), transparent 65%),
+      radial-gradient(480px 360px at 4% 6%, rgba(76,74,158,0.08), transparent 65%),
+      var(--bg);
+    color:var(--text);
+    font-family:'Noto Sans KR', sans-serif;
+    min-height:100vh;
+    position:relative;
+  }
+  .app{position:relative; z-index:1; display:flex; min-height:100vh;}
 
-        .container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 20px;
-            width: 100%;
-            max-width: 900px;
-        }
-        .card {
-            background-color: white;
-            padding: 22px 18px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            text-align: center;
-            text-decoration: none;
-            color: #333;
-            font-weight: 600;
-            font-size: 16px;
-            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
-            border: 2px solid transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            line-height: 1.4;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
-            color: #007bff;
-            border-color: #007bff;
-        }
-        /* 동영상 카드 특별 스타일 */
-        .card.video {
-            background-color: #ff0000;
-            color: white;
-            grid-column: 1 / -1; /* 맨 위에 길게 표시 */
-            font-size: 18px;
-        }
-        .card.video:hover {
-            background-color: #cc0000;
-            color: white;
-            border-color: transparent;
-        }
-    </style>
+  /* ---------- Sidebar ---------- */
+  .sidebar{
+    --paper:#EAF1FF;
+    --muted:#93A8D9;
+    --line:rgba(244,233,221,0.14);
+    width:236px; flex-shrink:0;
+    background:linear-gradient(180deg, #16264F, #0E1938);
+    padding:30px 0 24px;
+    display:flex; flex-direction:column;
+  }
+  .brand{padding:0 22px 22px; border-bottom:1px solid var(--line); margin-bottom:16px;}
+  .brand-mark{
+    display:inline-flex; align-items:center; gap:8px; color:#7FA8FF;
+    font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:11.5px;
+    letter-spacing:0.1em;
+  }
+  .brand-mark svg{flex-shrink:0;}
+  .brand h1{
+    font-family:'Space Grotesk', sans-serif; font-size:20px; font-weight:600;
+    margin:12px 0 6px; color:var(--paper); line-height:1.35;
+  }
+  .brand p{margin:0; font-size:12px; color:var(--muted); line-height:1.6;}
+
+  .nav-label{
+    font-family:'Space Mono', monospace; font-size:10px; letter-spacing:0.1em;
+    color:var(--muted); padding:0 22px; margin:6px 0 10px;
+  }
+  .tabs{display:flex; flex-direction:column; gap:3px; padding:0 12px;}
+  .tab{
+    display:flex; align-items:center; gap:10px;
+    padding:12px 14px; border-radius:var(--radius-sm); cursor:pointer;
+    border:1px solid transparent; background:transparent;
+    font-family:'Space Grotesk', sans-serif; font-size:15px; font-weight:500;
+    color:var(--muted); transition:all .15s ease;
+  }
+  .tab .dot{width:6px; height:6px; border-radius:50%; background:rgba(244,233,221,0.25); flex-shrink:0; transition:background .15s ease;}
+  .tab:hover{color:var(--paper); background:rgba(244,233,221,0.06);}
+  .tab.active{
+    color:#fff; background:linear-gradient(90deg, rgba(42,82,190,0.55), rgba(42,82,190,0.28));
+    border-color:rgba(127,168,255,0.4);
+  }
+  .tab.active .dot{background:#7FA8FF;}
+
+  /* ---------- Main ---------- */
+  main{flex:1; min-width:0; padding:42px 50px 40px; display:flex; flex-direction:column;}
+  .content{flex:1;}
+  .grade-head{margin-bottom:32px; padding-bottom:18px; border-bottom:1px solid var(--line);}
+  .grade-head .eyebrow{
+    font-family:'Space Mono', monospace; font-size:11px; color:var(--rust);
+    letter-spacing:0.06em; margin-bottom:8px; font-weight:700;
+  }
+  .grade-head h2{
+    font-family:'Space Grotesk', sans-serif; font-size:31px; font-weight:600;
+    margin:0; color:var(--text);
+  }
+
+  .section{margin-bottom:38px;}
+  .section-title{
+    display:flex; align-items:center; gap:10px; margin-bottom:16px;
+  }
+  .section-title h3{
+    font-family:'Space Grotesk', sans-serif; font-size:16px; font-weight:600; margin:0;
+    color:var(--text);
+  }
+  .section-title .icon{color:var(--rust); flex-shrink:0;}
+  .section-title .rule{flex:1; height:1px; background:var(--line);}
+
+  .empty{
+    border:1px dashed var(--line); border-radius:var(--radius); padding:22px 20px;
+    color:var(--muted); font-size:13px; line-height:1.6; background:var(--card);
+  }
+
+  .video-list{display:flex; flex-direction:column; gap:10px;}
+  .video-card{
+    display:flex; align-items:center; gap:16px;
+    background:var(--card);
+    border:1px solid var(--line); border-radius:var(--radius);
+    padding:15px 18px; text-decoration:none; color:inherit;
+    box-shadow:var(--shadow);
+    transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+  }
+  .video-card:hover{transform:translateY(-1px); border-color:var(--rust); box-shadow:0 6px 18px rgba(20,40,100,0.12);}
+  .video-card .play{
+    width:38px; height:38px; border-radius:50%; flex-shrink:0;
+    background:var(--rust-pale); color:var(--rust-deep);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .video-card .vtext{flex:1; min-width:0;}
+  .video-card .vtitle{font-weight:600; font-size:14.5px; color:var(--text); margin-bottom:3px;}
+  .video-card .vurl{font-family:'Space Mono', monospace; font-size:11px; color:var(--muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .video-card .go{color:var(--rust-deep); font-size:12px; font-weight:600; flex-shrink:0;}
+
+  .quiz-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(206px,1fr)); gap:12px;}
+  .quiz-card{
+    position:relative;
+    background:var(--card);
+    border:1px solid var(--line); border-left:3px solid var(--plum);
+    border-radius:var(--radius);
+    padding:16px 16px 15px; text-decoration:none; color:inherit;
+    box-shadow:var(--shadow);
+    transition:transform .15s ease, background .15s ease, border-color .15s ease;
+  }
+  .quiz-card:hover{border-left-color:var(--rust); background:var(--card-soft); transform:translateY(-1px);}
+  .quiz-unit{
+    display:inline-block; font-family:'Space Mono', monospace; font-size:10.5px; font-weight:700;
+    color:var(--plum); background:var(--plum-pale);
+    padding:2px 8px; border-radius:3px; margin-bottom:10px;
+  }
+  .quiz-title{font-weight:600; font-size:14.5px; color:var(--text); line-height:1.4;}
+
+
+  .custom-tag{
+    font-family:'Space Mono', monospace; font-size:9px; font-weight:700; color:var(--amber);
+    background:var(--amber-bg); border:1px solid rgba(138,90,22,0.25); padding:1px 6px; border-radius:3px;
+    margin-left:8px; vertical-align:middle;
+  }
+
+  /* bottom admin bar */
+  .admin-bar{
+    margin-top:36px; padding-top:18px; border-top:1px solid var(--line);
+    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;
+  }
+  .admin-bar .note{font-size:11.5px; color:var(--muted);}
+  .admin-btn{
+    display:flex; align-items:center; gap:8px;
+    background:var(--card); border:1px solid var(--line); color:var(--muted);
+    padding:10px 16px; border-radius:var(--radius-sm); cursor:pointer;
+    font-family:'Noto Sans KR',sans-serif; font-size:12.5px; font-weight:600;
+    transition:all .15s ease;
+  }
+  .admin-btn:hover{border-color:var(--rust); color:var(--rust-deep);}
+
+  /* ---------- Overlay / Modal ---------- */
+  .overlay{
+    position:fixed; inset:0; background:rgba(15,25,55,0.5); backdrop-filter:blur(3px);
+    display:none; align-items:center; justify-content:center; z-index:50; padding:20px;
+  }
+  .overlay.show{display:flex;}
+  .modal{
+    width:100%; max-width:360px; background:#fff;
+    border:1px solid var(--line); border-radius:var(--radius); padding:28px 26px 24px;
+    box-shadow:0 30px 70px rgba(15,25,55,0.28);
+  }
+  .modal h3{font-family:'Space Grotesk',sans-serif; font-size:18px; margin:0 0 6px; color:var(--text);}
+  .modal p.sub{font-size:12.5px; color:var(--muted); margin:0 0 20px; line-height:1.5;}
+  .field{margin-bottom:14px;}
+  .field label{display:block; font-size:12px; color:var(--muted); margin-bottom:6px; font-weight:600;}
+  .field input,.field select{
+    width:100%; background:var(--card-soft); border:1px solid var(--line); color:var(--text);
+    padding:10px 12px; border-radius:var(--radius-sm); font-size:13.5px; font-family:inherit;
+  }
+  .field input:focus,.field select:focus{outline:none; border-color:var(--rust);}
+  .modal-actions{display:flex; gap:8px; margin-top:18px;}
+  .btn{
+    flex:1; padding:11px 14px; border-radius:var(--radius-sm); border:1px solid var(--line);
+    background:transparent; color:var(--muted); font-size:13px; font-weight:600;
+    cursor:pointer; font-family:'Noto Sans KR',sans-serif; transition:all .15s ease;
+  }
+  .btn.primary{background:var(--rust); border-color:var(--rust); color:#fff;}
+  .btn.primary:hover{background:var(--rust-deep);}
+  .btn:hover{border-color:var(--rust); color:var(--text);}
+  .error-msg{color:#B4432B; font-size:12px; margin-top:10px; min-height:14px; font-weight:600;}
+  .ok-msg{color:var(--success); font-size:12px; margin-top:10px; min-height:14px; font-weight:600;}
+
+  /* ---------- Admin panel ---------- */
+  .admin-overlay{
+    position:fixed; inset:0; background:rgba(15,25,55,0.5); backdrop-filter:blur(2px);
+    display:none; z-index:60; justify-content:flex-end;
+  }
+  .admin-overlay.show{display:flex;}
+  .admin-panel{
+    width:100%; max-width:460px; height:100%; background:#FFFCF8;
+    border-left:1px solid var(--line); overflow-y:auto; padding:26px 26px 60px;
+  }
+  .admin-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:22px;}
+  .admin-head h3{font-family:'Space Grotesk',sans-serif; font-size:18px; margin:0; color:var(--text);}
+  .close-x{background:none; border:none; color:var(--muted); cursor:pointer; font-size:20px; line-height:1; padding:4px;}
+  .close-x:hover{color:var(--text);}
+  .admin-block{border:1px solid var(--line); border-radius:var(--radius); padding:18px; margin-bottom:16px; background:var(--card);}
+  .admin-block h4{font-family:'Space Grotesk',sans-serif; font-size:13px; margin:0 0 14px; color:var(--rust-deep); letter-spacing:.02em; font-weight:600;}
+  .link-row{
+    display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid var(--line); font-size:12.5px;
+  }
+  .link-row:last-child{border-bottom:none;}
+  .link-row .lr-tag{font-family:'Space Mono',monospace; font-size:9.5px; font-weight:700; color:var(--plum); border:1px solid var(--plum-pale); background:var(--plum-pale); padding:2px 6px; border-radius:3px; flex-shrink:0;}
+  .link-row .lr-title{flex:1; min-width:0; color:var(--text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .link-row .lr-del{background:none; border:none; color:var(--muted); cursor:pointer; font-size:14px; padding:2px 6px; flex-shrink:0;}
+  .link-row .lr-del:hover{color:#B4432B;}
+  .empty-mini{color:var(--muted); font-size:12px; padding:6px 0;}
+
+  @media (max-width:820px){
+    .app{flex-direction:column;}
+    .sidebar{width:100%; padding:18px 0;}
+    .tabs{flex-direction:row; overflow-x:auto; padding:0 16px 4px;}
+    .tab{white-space:nowrap;}
+    main{padding:26px 18px 34px;}
+    .grade-head h2{font-size:25px;}
+    .admin-panel{max-width:100%;}
+    .admin-bar{flex-direction:column; align-items:flex-start;}
+  }
+</style>
 </head>
 <body>
+<div class="app">
 
-    <h1>📚 중2 과학 학습 대시보드<br>이은정 강사</h1>
-
-    <div class="container">
-        <!-- 유튜브 동영상 재생목록 -->
-        <a href="https://youtube.com/playlist?list=PLwAliv9fb_U7W4fqFFSfBADt3aMi9ti0-&si=0G_8LdEw0Y77A8Se" class="card video" target="_blank">
-            ▶️ 중2 과학 동영상 재생목록
-        </a>
-
-        <!-- 단원별 링크 모음 -->
-        <a href="https://eunjungcheer-collab.github.io/2-1" class="card" target="_blank">1단원 물질의 특성</a>
-        <a href="https://eunjungcheer-collab.github.io/2-2" class="card" target="_blank">2단원 지권의 변화</a>
-        <a href="https://eunjungcheer-collab.github.io/2-4" class="card" target="_blank">4단원 물질의 구성</a>
-        <a href="https://eunjungcheer-collab.github.io/2-5" class="card" target="_blank">5단원 식물의 구성</a>
-        <a href="https://eunjungcheer-collab.github.io/2-6-1" class="card" target="_blank">6단원 소화</a>
-        <a href="https://eunjungcheer-collab.github.io/2-6-2/" class="card" target="_blank">6단원 순환</a>
-        <a href="https://eunjungcheer-collab.github.io/2-6-3" class="card" target="_blank">6단원 호흡</a>
-        <a href="https://eunjungcheer-collab.github.io/2-6-4" class="card" target="_blank">6단원 배설</a>
-        <a href="https://eunjungcheer-collab.github.io/2-7" class="card" target="_blank">7단원 전기와 자기</a>
-        <a href="https://eunjungcheer-collab.github.io/2-8" class="card" target="_blank">8단원 별과 우주</a>
-       
-
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M9 2v6.5L4 18c-.7 1.3.3 3 1.8 3h12.4c1.5 0 2.5-1.7 1.8-3L15 8.5V2" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7 15h10" stroke="currentColor" stroke-width="1.6"/><path d="M9 2h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        EUNJUNG SCIENCE
+      </div>
+      <h1>이은정 과학 연구소</h1>
+      <p>학년별 동영상 강의 &amp; 단원 퀴즈 아카이브</p>
     </div>
 
+    <div class="nav-label">GRADE / 학년 선택</div>
+    <nav class="tabs" id="tabs"></nav>
+  </aside>
+
+  <main>
+    <div class="content">
+      <div class="grade-head">
+        <div class="eyebrow" id="gradeEyebrow">GRADE</div>
+        <h2 id="gradeTitle">-</h2>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="2.5" y="5" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M21 8.5v7l-4.5-2.2v-2.6L21 8.5z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></span>
+          <h3>동영상 강의</h3>
+          <div class="rule"></div>
+        </div>
+        <div class="video-list" id="videoList"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2 3 6.5v9L12 20l9-4.5v-9L12 2Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 11v6M8.5 8.7 12 11l3.5-2.3" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></span>
+          <h3>단원별 퀴즈</h3>
+          <div class="rule"></div>
+        </div>
+        <div class="quiz-grid" id="quizGrid"></div>
+      </div>
+    </div>
+
+    <div class="admin-bar">
+      <span class="note">© 이은정 과학 연구소</span>
+      <button class="admin-btn" id="adminOpenBtn">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="9" rx="1.5" stroke="currentColor" stroke-width="1.6"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="currentColor" stroke-width="1.6"/></svg>
+        선생님 전용 관리
+      </button>
+    </div>
+  </main>
+</div>
+
+<!-- Password modal -->
+<div class="overlay" id="pwOverlay">
+  <div class="modal">
+    <h3>선생님 전용 관리</h3>
+    <p class="sub">비밀번호를 입력하면 자료 추가·삭제와 비밀번호 변경이 가능합니다.</p>
+    <div class="field">
+      <label>비밀번호</label>
+      <input type="password" id="pwInput" placeholder="••••" inputmode="numeric" autocomplete="off">
+    </div>
+    <div class="error-msg" id="pwError"></div>
+    <div class="modal-actions">
+      <button class="btn" id="pwCancel">취소</button>
+      <button class="btn primary" id="pwSubmit">확인</button>
+    </div>
+  </div>
+</div>
+
+<!-- Admin panel -->
+<div class="admin-overlay" id="adminOverlay">
+  <div class="admin-panel">
+    <div class="admin-head">
+      <h3>선생님 전용 관리</h3>
+      <button class="close-x" id="adminClose">✕</button>
+    </div>
+
+    <div class="admin-block">
+      <h4>새 자료 추가</h4>
+      <div class="field">
+        <label>학년</label>
+        <select id="addGrade"></select>
+      </div>
+      <div class="field">
+        <label>종류</label>
+        <select id="addType">
+          <option value="video">동영상</option>
+          <option value="quiz">퀴즈</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>제목</label>
+        <input type="text" id="addTitle" placeholder="예: 9단원 원소와 화합물">
+      </div>
+      <div class="field">
+        <label>URL 주소</label>
+        <input type="text" id="addUrl" placeholder="https://...">
+      </div>
+      <div class="error-msg" id="addError"></div>
+      <div class="ok-msg" id="addOk"></div>
+      <button class="btn primary" style="width:100%; margin-top:4px;" id="addBtn">추가하기</button>
+    </div>
+
+    <div class="admin-block">
+      <h4>추가된 자료 목록</h4>
+      <div id="customLinkList"></div>
+    </div>
+
+    <div class="admin-block">
+      <h4>비밀번호 변경</h4>
+      <div class="field">
+        <label>새 비밀번호</label>
+        <input type="password" id="newPw" placeholder="새 비밀번호" inputmode="numeric">
+      </div>
+      <div class="field">
+        <label>새 비밀번호 확인</label>
+        <input type="password" id="newPw2" placeholder="다시 입력" inputmode="numeric">
+      </div>
+      <div class="error-msg" id="pwChangeError"></div>
+      <div class="ok-msg" id="pwChangeOk"></div>
+      <button class="btn primary" style="width:100%; margin-top:4px;" id="changePwBtn">비밀번호 변경</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const GRADES = ['초6','중1','중2','중3','공통과학','물리학','화학','생명과학','지구과학','구술면접'];
+
+const BUILTIN = {
+  '초6': {
+    videos: [],
+    quizzes: [
+      {title:'지구의 운동', unit:'4단원', url:'https://eunjungcheer-collab.github.io/6-4/'}
+    ]
+  },
+  '중1': {
+    videos: [
+      {title:'중1 과학 전체 강의', url:'https://youtube.com/playlist?list=PLwAliv9fb_U5gpPKSc7s4hugcM4qrhp2s&si=qGxBhfQYCc0kV_eO'}
+    ],
+    quizzes: []
+  },
+  '중2': {
+    videos: [
+      {title:'중2 과학 전체 강의', url:'https://youtube.com/playlist?list=PLwAliv9fb_U7W4fqFFSfBADt3aMi9ti0-&si=IlQqBiLzH7Y5vnYk'}
+    ],
+    quizzes: [
+      {title:'물질의 특성', unit:'1단원', url:'https://eunjungcheer-collab.github.io/2-1'},
+      {title:'지권의 변화', unit:'2단원', url:'https://eunjungcheer-collab.github.io/2-2'},
+      {title:'물질의 구성', unit:'4단원', url:'https://eunjungcheer-collab.github.io/2-4'},
+      {title:'식물의 구성', unit:'5단원', url:'https://eunjungcheer-collab.github.io/2-5'},
+      {title:'소화', unit:'6단원', url:'https://eunjungcheer-collab.github.io/2-6-1'},
+      {title:'순환', unit:'6단원', url:'https://eunjungcheer-collab.github.io/2-6-2/'},
+      {title:'호흡', unit:'6단원', url:'https://eunjungcheer-collab.github.io/2-6-3'},
+      {title:'배설', unit:'6단원', url:'https://eunjungcheer-collab.github.io/2-6-4'},
+      {title:'전기와 자기', unit:'7단원', url:'https://eunjungcheer-collab.github.io/2-7'},
+      {title:'별과 우주', unit:'8단원', url:'https://eunjungcheer-collab.github.io/2-8'}
+    ]
+  },
+  '중3': {
+    videos: [
+      {title:'중3 과학 전체 강의 (2015개정)', url:'https://youtube.com/playlist?list=PLwAliv9fb_U5gpPKSc7s4hugcM4qrhp2s&si=qGxBhfQYCc0kV_eO'}
+    ],
+    quizzes: []
+  },
+  '공통과학': {
+    videos: [
+      {title:'공통과학1 전체 강의', url:'https://youtube.com/playlist?list=PLwAliv9fb_U4ofROEkSm_e_VXYC66ZQhk&si=RJFvXA2Nyo3UR1H3'},
+      {title:'공통과학2 전체 강의', url:'https://youtube.com/playlist?list=PLwAliv9fb_U5_iXfHj1i2h4l84OVFPVqI&si=-b9n4slz8bWC2a6p'}
+    ],
+    quizzes: []
+  },
+  '물리학': { videos: [], quizzes: [] },
+  '화학': { videos: [], quizzes: [] },
+  '생명과학': { videos: [], quizzes: [] },
+  '지구과학': { videos: [], quizzes: [] },
+  '구술면접': {
+    videos: [],
+    quizzes: [
+      {title:'과학교과 구술면접 연습', unit:'면접', url:'https://eunjungcheer-collab.github.io/interviewgms/'}
+    ]
+  }
+};
+
+
+let currentGrade = '초6';
+let customLinks = [];   // {id, grade, type, title, url}
+let adminUnlocked = false;
+
+// ---------- storage helpers ----------
+async function loadCustomLinks(){
+  try{
+    const r = await window.storage.get('custom-links', false);
+    if(r && r.value) return JSON.parse(r.value);
+  }catch(e){ /* not set yet */ }
+  return [];
+}
+async function saveCustomLinks(arr){
+  try{
+    await window.storage.set('custom-links', JSON.stringify(arr), false);
+  }catch(e){ console.error('save failed', e); }
+}
+async function loadPassword(){
+  try{
+    const r = await window.storage.get('admin-password', false);
+    if(r && r.value) return r.value;
+  }catch(e){ /* not set yet */ }
+  return '0000';
+}
+async function savePassword(pw){
+  try{
+    await window.storage.set('admin-password', pw, false);
+  }catch(e){ console.error('save failed', e); }
+}
+
+// ---------- data helpers ----------
+function mergedFor(grade){
+  const base = BUILTIN[grade] || {videos:[],quizzes:[]};
+  const videos = base.videos.map(v=>({...v, custom:false}));
+  const quizzes = base.quizzes.map(q=>({...q, custom:false}));
+  customLinks.filter(l=>l.grade===grade).forEach(l=>{
+    const item = {title:l.title, url:l.url, unit:l.unit||'', custom:true, id:l.id};
+    if(l.type==='video') videos.push(item);
+    else if(l.type==='quiz') quizzes.push(item);
+  });
+  return {videos, quizzes};
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function shortUrl(u){
+  try{ const x = new URL(u); return x.hostname + x.pathname.replace(/\/$/,''); }
+  catch(e){ return u; }
+}
+
+// ---------- render ----------
+function renderTabs(){
+  const el = document.getElementById('tabs');
+  el.innerHTML = GRADES.map(g=>{
+    return `<div class="tab ${g===currentGrade?'active':''}" data-grade="${g}">
+      <span class="dot"></span><span>${g}</span>
+    </div>`;
+  }).join('');
+  el.querySelectorAll('.tab').forEach(t=>{
+    t.addEventListener('click', ()=>{ currentGrade = t.dataset.grade; renderAll(); });
+  });
+}
+
+function renderMain(){
+  document.getElementById('gradeEyebrow').textContent = `GRADE / ${currentGrade}`;
+  document.getElementById('gradeTitle').textContent = currentGrade + ' 과학';
+
+  const {videos, quizzes} = mergedFor(currentGrade);
+
+  const videoList = document.getElementById('videoList');
+  videoList.innerHTML = videos.length ? videos.map(v=>`
+    <a class="video-card" href="${escapeHtml(v.url)}" target="_blank" rel="noopener">
+      <span class="play">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7L8 5Z"/></svg>
+      </span>
+      <span class="vtext">
+        <span class="vtitle">${escapeHtml(v.title)}${v.custom?'<span class="custom-tag">NEW</span>':''}</span>
+        <span class="vurl">${escapeHtml(shortUrl(v.url))}</span>
+      </span>
+      <span class="go">열기 →</span>
+    </a>`).join('') : `<div class="empty">등록된 동영상 강의가 없습니다.</div>`;
+
+  const quizGrid = document.getElementById('quizGrid');
+  quizGrid.innerHTML = quizzes.length ? quizzes.map(q=>`
+    <a class="quiz-card" href="${escapeHtml(q.url)}" target="_blank" rel="noopener">
+      ${q.unit ? `<span class="quiz-unit">${escapeHtml(q.unit)}</span>` : ''}
+      <div class="quiz-title">${escapeHtml(q.title)}${q.custom?'<span class="custom-tag">NEW</span>':''}</div>
+    </a>`).join('') : `<div class="empty">등록된 퀴즈가 없습니다.</div>`;
+}
+
+function renderAdminList(){
+  const el = document.getElementById('customLinkList');
+  if(!customLinks.length){
+    el.innerHTML = `<div class="empty-mini">아직 추가된 자료가 없습니다.</div>`;
+    return;
+  }
+  const typeLabel = {video:'동영상', quiz:'퀴즈'};
+  el.innerHTML = customLinks.map(l=>`
+    <div class="link-row">
+      <span class="lr-tag">${escapeHtml(l.grade)} · ${typeLabel[l.type]||l.type}</span>
+      <span class="lr-title">${escapeHtml(l.title)}</span>
+      <button class="lr-del" data-id="${l.id}" title="삭제">✕</button>
+    </div>`).join('');
+  el.querySelectorAll('.lr-del').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      customLinks = customLinks.filter(l=>l.id !== btn.dataset.id);
+      await saveCustomLinks(customLinks);
+      renderAdminList();
+      renderAll();
+    });
+  });
+}
+
+function renderAll(){
+  renderTabs();
+  renderMain();
+}
+
+// ---------- admin form population ----------
+function populateAddGradeSelect(){
+  const sel = document.getElementById('addGrade');
+  sel.innerHTML = GRADES.map(g=>`<option value="${g}">${g}</option>`).join('');
+}
+
+// ---------- events: password modal ----------
+const pwOverlay = document.getElementById('pwOverlay');
+const adminOverlay = document.getElementById('adminOverlay');
+
+document.getElementById('adminOpenBtn').addEventListener('click', ()=>{
+  document.getElementById('pwInput').value = '';
+  document.getElementById('pwError').textContent = '';
+  pwOverlay.classList.add('show');
+  setTimeout(()=>document.getElementById('pwInput').focus(), 50);
+});
+document.getElementById('pwCancel').addEventListener('click', ()=> pwOverlay.classList.remove('show'));
+pwOverlay.addEventListener('click', (e)=>{ if(e.target===pwOverlay) pwOverlay.classList.remove('show'); });
+
+async function trySubmitPassword(){
+  const val = document.getElementById('pwInput').value;
+  const correct = await loadPassword();
+  if(val === correct){
+    pwOverlay.classList.remove('show');
+    adminUnlocked = true;
+    populateAddGradeSelect();
+    renderAdminList();
+    adminOverlay.classList.add('show');
+  }else{
+    document.getElementById('pwError').textContent = '비밀번호가 올바르지 않습니다.';
+  }
+}
+document.getElementById('pwSubmit').addEventListener('click', trySubmitPassword);
+document.getElementById('pwInput').addEventListener('keydown', e=>{ if(e.key==='Enter') trySubmitPassword(); });
+
+document.getElementById('adminClose').addEventListener('click', ()=> adminOverlay.classList.remove('show'));
+adminOverlay.addEventListener('click', (e)=>{ if(e.target===adminOverlay) adminOverlay.classList.remove('show'); });
+
+// ---------- add link ----------
+document.getElementById('addBtn').addEventListener('click', async ()=>{
+  const grade = document.getElementById('addGrade').value;
+  const type = document.getElementById('addType').value;
+  const title = document.getElementById('addTitle').value.trim();
+  const url = document.getElementById('addUrl').value.trim();
+  const errEl = document.getElementById('addError');
+  const okEl = document.getElementById('addOk');
+  errEl.textContent = ''; okEl.textContent = '';
+
+  if(!title || !url){ errEl.textContent = '제목과 URL을 모두 입력해주세요.'; return; }
+  let normalizedUrl = url;
+  if(!/^https?:\/\//i.test(normalizedUrl)) normalizedUrl = 'https://' + normalizedUrl;
+  try{ new URL(normalizedUrl); }catch(e){ errEl.textContent = '올바른 URL 형식이 아닙니다.'; return; }
+
+  const entry = { id: 'l_'+Date.now()+'_'+Math.random().toString(36).slice(2,7), grade, type, title, url: normalizedUrl };
+  customLinks.push(entry);
+  await saveCustomLinks(customLinks);
+
+  document.getElementById('addTitle').value = '';
+  document.getElementById('addUrl').value = '';
+  okEl.textContent = '추가되었습니다.';
+  renderAdminList();
+  renderAll();
+  setTimeout(()=>{ okEl.textContent=''; }, 2000);
+});
+
+// ---------- change password ----------
+document.getElementById('changePwBtn').addEventListener('click', async ()=>{
+  const p1 = document.getElementById('newPw').value;
+  const p2 = document.getElementById('newPw2').value;
+  const errEl = document.getElementById('pwChangeError');
+  const okEl = document.getElementById('pwChangeOk');
+  errEl.textContent=''; okEl.textContent='';
+
+  if(!p1 || p1.length < 2){ errEl.textContent = '비밀번호를 2자 이상 입력해주세요.'; return; }
+  if(p1 !== p2){ errEl.textContent = '비밀번호가 서로 일치하지 않습니다.'; return; }
+
+  await savePassword(p1);
+  document.getElementById('newPw').value = '';
+  document.getElementById('newPw2').value = '';
+  okEl.textContent = '비밀번호가 변경되었습니다.';
+  setTimeout(()=>{ okEl.textContent=''; }, 2500);
+});
+
+// ---------- init ----------
+(async function init(){
+  customLinks = await loadCustomLinks();
+  renderAll();
+})();
+</script>
 </body>
 </html>
